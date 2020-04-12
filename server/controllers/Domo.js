@@ -1,6 +1,6 @@
 const models = require('../models');
 
-const Domo = models.Domo;
+const { Domo } = models;
 
 const makerPage = (req, res) => {
   Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
@@ -71,30 +71,30 @@ const removePage = (req, res) => {
 const getDomos = (request, response) => {
   const req = request;
   const res = response;
-  
+
   return Domo.DomoModel.findByOwner(req.session.account._id, (err, docs) => {
-    if(err) {
+    if (err) {
       console.log(err);
-      return res.status(400).json({ error: 'An error occurred'});
+      return res.status(400).json({ error: 'An error occurred' });
     }
-    
+
     return res.json({ domos: docs });
   });
 };
 
 
 const removeDomo = (request, response) => {
-    const req = request;
-    const res = response;
-    
-    return Domo.DomoModel.removeById(req.body._id, (err, docs) => {
-        if (err) {
-          console.log(err);
-          return res.status(400).json({ error: 'An error occurred' });
-        }
+  const req = request;
+  const res = response;
 
-        return res.json({ domos: docs });
-    });
+  return Domo.DomoModel.removeById(req.body._id, (err, docs) => {
+    if (err) {
+      console.log(err);
+      return res.status(400).json({ error: 'An error occurred' });
+    }
+
+    return res.json({ domos: docs });
+  });
 };
 
 module.exports.makerPage = makerPage;

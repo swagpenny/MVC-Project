@@ -1,93 +1,58 @@
-"use strict";
+//api source: https://rapidapi.com/omgvamp/api/hearthstone?endpoint=5525c4a8e4b01d538895c588
 
-//added removeBundle for removing a Domo
+var cards;
+var dataPromise;
 
-var csrf = 0;
+function getCardData() {
+  if(!dataPromise){
+    dataPromise = $.ajax({ // Store jQuery promise so that we can return it for subsequent calls ensuring only one AJAX request is made
+      url: 'https://omgvamp-hearthstone-v1.p.rapidapi.com/cards',
+      method: 'GET',
+      dataType: 'json',
+      "headers": {
+		"x-rapidapi-host": "omgvamp-hearthstone-v1.p.rapidapi.com",
+		"x-rapidapi-key": "6495acf76amshac6bdaf8e37a619p10fdbcjsne8b097b601cf"
+	}
+    });
+  } 
+  return dataPromise;
+}
 
-//From login bundle
-var handleError = function handleError(message) {
-  $("#errorMessage").text(message);
-  $("#domoMessage").animate({
-    width: 'toggle'
-  }, 350);
-};
+function showCardRandom(){
+  var cardNo = Math.floor(Math.random() * cards.length); // Select a random card number
+  showCard(cardNo)
+}
 
-var redirect = function redirect(response) {
-  $("#domoMessage").animate({
-    width: 'hide'
-  }, 350);
-  window.location = response.redirect;
-};
+function showCard(cardNo){
+  var obj = cards[cardNo];
+  $("#card-image").attr('src', obj.img);
+  $("#card-name").html(obj.name);
+  $("#card-type").text(obj.type);
+  $("#card-faction").text(obj.faction);
+  $("#card-rarity").text(obj.rarity);
+  $("#player-class").text(obj.playerClass);
+  $("#artist-name").text(obj.artist);
+}
 
-var sendAjax = function sendAjax(type, action, data, success) {
-  $.ajax({
-    cache: false,
-    type: type,
-    url: action,
-    data: data,
-    dataType: "json",
-    success: success,
-    error: function error(xhr, status, _error) {
-      var messageObj = JSON.parse(xhr.responseText);
-      handleError(messageObj.error);
+function flattenCards(data){
+    // Flatten the object as cards are stored in sets
+    var result = [];
+    for (var set in data) {
+      for (var i = 0; i < data[set].length; i++) {
+        result.push(data[set][i]);
+      }
     }
-  });
-};
+    return result;
+}
 
-//removing domo from form
+getCardData(); // Start loading card data ASAP - subsequent calls will return the same promise anyway
 
-var DomoList = function DomoList(props) {
-  if (props.domos.length === 0) {
-    return (/*#__PURE__*/React.createElement("div", {
-        className: "domoList"
-      }, /*#__PURE__*/React.createElement("h3", {
-        className: "emptyDomo"
-      }, "No Domos Yet"))
-    );
-  }
-
-  var domoNodes = props.domos.map(function (domo) {
-    return (/*#__PURE__*/React.createElement("div", {
-        key: domo._id,
-        className: "domo"
-      }, /*#__PURE__*/React.createElement("img", {
-        src: "/assets/img/domoface.jpeg",
-        alt: "domo face",
-        className: "domoFace"
-      }), /*#__PURE__*/React.createElement("h3", {
-        className: "domoName"
-      }, "Name: ", domo.name), /*#__PURE__*/React.createElement("h3", {
-        className: "domoAge"
-      }, "Age: ", domo.age), /*#__PURE__*/React.createElement("h3", {
-        className: "domoHeight"
-      }, "Height: ", domo.height))
-    );
-  });
-  return (/*#__PURE__*/React.createElement("div", {
-      className: "domoList"
-    }, domoNodes)
-  );
-};
-
-//get Domos from the server for deletion
-var loadDomosFromServer = function loadDomosFromServer() {
-    sendAjax('GET', '/getDomos', null, function (data) {
-        ReactDOM.render(React.createElement(DomoList, { domos: data.domos }), document.querySelector("#domos"));
+$(document).ready(function() {
+  getCardData()
+    .done(function(data){
+       $("#nextCard").text("Next");
+       cards = flattenCards(data);
+       showCardRandom();
     });
-};
-
-var setup = function setup(csrfToken) {
-    csrf = csrfToken;
-    ReactDOM.render(React.createElement(DomoList, { domos: [] }), document.querySelector("#domos"));
-    loadDomosFromServer();
-};
-
-var getToken = function getToken() {
-    sendAjax('GET', '/getToken', null, function (result) {
-        setup(result.csrfToken);
-    });
-};
-
-$(document).ready(function () {
-    getToken();
+  $('#nextCard').click(showCardRandom);
 });

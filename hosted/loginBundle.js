@@ -171,7 +171,6 @@ var sendAjax = function sendAjax(type, action, data, success) {
     url: action,
     data: data,
     dataType: "json",
-    dataType: "json",
     success: success,
     error: function error(xhr, status, _error) {
       var messageObj = JSON.parse(xhr.responseText);
