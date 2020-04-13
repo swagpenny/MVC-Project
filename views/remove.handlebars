@@ -7,10 +7,11 @@
   <script crossorigin src="https://unpkg.com/prop-types/prop-types.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/babel-core/5.8.34/browser.min.js"></script>
   <script src="https://cdnjs.cloudflare.com/ajax/libs/jquery/2.2.0/jquery.min.js"></script>
-    <script src="https://ajax.googleapis.com/ajax/libs/jquery/1.11.1/jquery.min.js"></script>
 
   <script src="https://cdnjs.cloudflare.com/ajax/libs/remarkable/1.6.2/remarkable.min.js"></script>
-  <link rel="shortcut icon" href="/assets/img/favicon.png"/>
+    
+    <script src="https://ajax.googleapis.com/ajax/libs/jquery/3.4.1/jquery.min.js"></script>
+    
   <link rel="stylesheet" type="text/css" href="/assets/style.css"/>
 </head>
 <body>
@@ -18,20 +19,17 @@
     <div class="navlink"><a href="/logout">Log out</a></div>
     <div class="navlink"><a href="/maker">Maker</a></div>
   </nav>
-  <section id="domos">
-  </section>
-  <div id="domoMessage"><img id="speech" src="/assets/img/speech.png" alt="speech box"/>
-    <h3><span id="errorMessage"></span></h3><img id="domo" src="assets/img/domo.png" alt="domo"/>
-  </div>
     
-    <img id="card-image">
+    <section id="cardinfo">
+<img id="card-image">
+<div id="class"></div>
 <div id="card-name"></div>
 <div id="card-type"></div>
 <div id="card-faction"></div>
 <div id="card-rarity"></div>
 <div id="player-class"></div>
 <div id="artist-name"></div>
-<button id="nextCard">Loading Data...</button>
+<button id="nextCard">Loading Data...</button></section>
     
   <script src="/assets/removeBundle.js"></script>
 </body>
